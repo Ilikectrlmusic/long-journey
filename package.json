@@ -1,0 +1,12 @@
+{
+  "name": "long-journey",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "一个温柔记录每日精力的日历。纯静态 HTML，部署于 GitHub Pages。",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": { "node": ">=22" }
+}
