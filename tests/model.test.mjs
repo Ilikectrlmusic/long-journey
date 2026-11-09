@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { dateKey, validDate, validateData, totalAt, changeLabel, mergeRecord } from '../assets/model.js';
 
-const sample = JSON.parse(await readFile(new URL('../data/energy.json', import.meta.url), 'utf8'));
+const sample = JSON.parse(await readFile(new URL('./fixtures/initial-energy.json', import.meta.url), 'utf8'));
 const record = (kind, operation, amount, note = '') => ({ kind, operation, amount, note });
 test('initial records: zero start, school Nov 2–6, home +3 Nov 7–8, total 6', () => {
   const { records } = validateData(sample);

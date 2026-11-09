@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "records": {
+    "2026-11-01": { "kind": "school", "operation": "keep", "amount": 0, "note": "零分起点" },
+    "2026-11-02": { "kind": "school", "operation": "keep", "amount": 0, "note": "" },
+    "2026-11-03": { "kind": "school", "operation": "keep", "amount": 0, "note": "" },
+    "2026-11-04": { "kind": "school", "operation": "keep", "amount": 0, "note": "" },
+    "2026-11-05": { "kind": "school", "operation": "keep", "amount": 0, "note": "" },
+    "2026-11-06": { "kind": "school", "operation": "keep", "amount": 0, "note": "" },
+    "2026-11-07": { "kind": "home", "operation": "add", "amount": 3, "note": "" },
+    "2026-11-08": { "kind": "home", "operation": "add", "amount": 3, "note": "" }
+  }
+}

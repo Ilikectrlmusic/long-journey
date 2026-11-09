@@ -71,6 +71,7 @@ function renderSummary() {
   if (!data) return;
   const total = totalAt(data.records, today);
   $('current-total').textContent = total.toLocaleString('zh-CN');
+  $('today-record-status').textContent = data.records[today] ? '今日已记录' : '今日尚未记录';
   $('record-count').textContent = `${Object.keys(data.records).filter(key => key <= today).length} 天记录`;
   const progress = Math.max(0, Math.min(100, total));
   $('progress-fill').style.width = `${progress}%`;
@@ -111,7 +112,7 @@ function renderCalendar() {
     if (key === today) cell.setAttribute('aria-current', 'date');
     cell.append(textElement('span', 'day-date', String(day)));
     cell.append(textElement('span', `day-circle ${record ? record.kind : 'empty'}${label.length > 4 ? ' long-number' : ''}`, label));
-    cell.append(textElement('span', `day-total${key === START_DATE ? ' start-date' : ''}`, total === null ? '—' : key === START_DATE ? `起点 · ${total}` : `累计 ${total.toLocaleString('zh-CN')}`));
+    cell.append(textElement('span', 'day-total', total === null ? '—' : total.toLocaleString('zh-CN')));
     cell.addEventListener('click', () => openDay(key));
     grid.append(cell);
   }
@@ -272,7 +273,6 @@ function setupCalendar() {
   $('today-label').textContent = formatDate(today, { year: 'numeric', weekday: 'long' });
   $('previous-month').addEventListener('click', () => { month = new Date(month.getFullYear(), month.getMonth() - 1, 1); renderCalendar(); });
   $('next-month').addEventListener('click', () => { month = new Date(month.getFullYear(), month.getMonth() + 1, 1); renderCalendar(); });
-  $('this-month').addEventListener('click', () => { month = new Date(new Date().getFullYear(), new Date().getMonth(), 1); renderCalendar(); });
   $('export-data').addEventListener('click', () => {
     if (!data) return;
     const blob = new Blob([JSON.stringify(data, null, 2) + '\n'], { type: 'application/json' });

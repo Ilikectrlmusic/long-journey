@@ -8,7 +8,7 @@ from playwright.sync_api import sync_playwright, expect
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = "http://127.0.0.1:4173/long-journey/"
-SEED = json.loads((ROOT / "data/energy.json").read_text())
+SEED = json.loads((ROOT / "tests/fixtures/initial-energy.json").read_text())
 state = {"data": json.loads(json.dumps(SEED)), "revision": 1, "fail_put": False, "fail_read": False, "writes": 0}
 errors = []
 
@@ -49,6 +49,7 @@ with sync_playwright() as p:
     def context(width=1440, height=1080):
         ctx = browser.new_context(viewport={"width": width, "height": height}, timezone_id="Asia/Shanghai", locale="zh-CN")
         ctx.route("https://api.github.com/**", api)
+        ctx.route("**/long-journey/data/energy.json", lambda route: route.fulfill(json=SEED))
         page = ctx.new_page()
         page.clock.set_fixed_time("2026-11-09T10:00:00+08:00")
         page.on("pageerror", lambda error: errors.append(str(error)))
@@ -58,18 +59,19 @@ with sync_playwright() as p:
     ctx, calendar = context()
     calendar.goto(BASE)
     expect(calendar.locator("#current-total")).to_have_text("6")
+    expect(calendar.locator("#today-record-status")).to_have_text("今日尚未记录")
     expect(calendar.locator("[role=progressbar]")).to_have_attribute("aria-valuenow", "6")
     for day in range(2, 7):
         expect(calendar.locator(f'[data-date="2026-11-0{day}"] .day-circle')).to_have_class("day-circle school")
     expect(calendar.locator('[data-date="2026-11-07"] .day-circle')).to_have_text("+3")
-    expect(calendar.locator('[data-date="2026-11-08"] .day-total')).to_have_text("累计 6")
+    expect(calendar.locator('[data-date="2026-11-08"] .day-total')).to_have_text("6")
     calendar.locator('[data-date="2026-11-07"]').click()
     expect(calendar.locator("#day-dialog")).to_be_visible()
     expect(calendar.locator("#edit-day-link")).to_have_attribute("href", "edit/?date=2026-11-07")
     calendar.locator("#day-dialog [data-close]").click()
     calendar.locator("#next-month").click()
     expect(calendar.locator("#month-title")).to_have_text("2026 年 12 月")
-    calendar.locator("#this-month").click()
+    calendar.locator("#previous-month").click()
     (ROOT / "test-results").mkdir(exist_ok=True)
     calendar.screenshot(path=str(ROOT / "test-results/desktop.png"), full_page=True)
 
@@ -137,6 +139,7 @@ with sync_playwright() as p:
     expect(edit.locator("#save-status")).to_contain_text("已同步到云端")
     calendar.reload()
     expect(calendar.locator("#current-total")).to_have_text("0")
+    expect(calendar.locator("#today-record-status")).to_have_text("今日已记录")
     expect(calendar.locator('[data-date="2026-11-09"] .day-circle')).to_have_text("零")
     expect(calendar.locator('[data-date="2026-11-09"] .day-circle')).to_have_class("day-circle big")
     edit.screenshot(path=str(ROOT / "test-results/mobile-edit.png"), full_page=True)
@@ -148,6 +151,7 @@ with sync_playwright() as p:
     assert "2026-11-09" not in state["data"]["records"]
     calendar.reload()
     expect(calendar.locator("#current-total")).to_have_text("8")
+    expect(calendar.locator("#today-record-status")).to_have_text("今日尚未记录")
     expect(calendar.locator('[data-date="2026-11-09"] .day-circle')).to_have_text("—")
 
     # Check no horizontal overflow at small phone, tablet, and desktop sizes.
