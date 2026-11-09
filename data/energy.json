@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "records": {
     "2026-11-01": {
-      "kind": "school",
-      "operation": "keep",
+      "kind": "big",
+      "operation": "reset",
       "amount": 0,
-      "note": "零分起点"
+      "note": "出远门到南充"
     },
     "2026-11-02": {
       "kind": "school",
