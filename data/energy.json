@@ -72,6 +72,12 @@
       "operation": "keep",
       "amount": 0,
       "note": "下午海燕给我做了手法，好舒服😌"
+    },
+    "2026-11-13": {
+      "kind": "home",
+      "operation": "add",
+      "amount": 3,
+      "note": "晚上真的出现了非常强烈的气脉反应，好神奇啊"
     }
   }
 }
